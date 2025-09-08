@@ -1,6 +1,9 @@
 import React from 'react';
+import { useRenderPerformance } from '../../hooks/usePerformance';
 
-const FilterTabs = ({ activeFilter, onFilterChange, filters }) => {
+const FilterTabs = React.memo(({ activeFilter, onFilterChange, filters }) => {
+  // Track render performance
+  useRenderPerformance('FilterTabs');
   return (
     <div className="flex justify-between items-center w-full">
       {/* Left Side - Event Title */}
@@ -32,6 +35,8 @@ const FilterTabs = ({ activeFilter, onFilterChange, filters }) => {
       </div>
     </div>
   );
-};
+});
+
+FilterTabs.displayName = 'FilterTabs';
 
 export default FilterTabs;

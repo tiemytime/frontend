@@ -1,6 +1,6 @@
 import React from 'react';
 
-const WallFooter = ({ totalCount }) => {
+const WallFooter = React.memo(({ totalCount }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-between items-center p-8 lg:px-16 xl:px-24 bg-gradient-to-t from-black/20 to-transparent">
       {/* Left side - Candle and Copyright */}
@@ -21,6 +21,8 @@ const WallFooter = ({ totalCount }) => {
       </div>
     </div>
   );
-};
+});
+
+WallFooter.displayName = 'WallFooter';
 
 export default WallFooter;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import StarfieldBackground from '../components/background/Starfeildbackground';
 import LeftPanel from '../components/prayersubmission/LeftPanel';
 import RightPanel from '../components/prayersubmission/RightPanel';
 import PrayerModal from '../components/Globe/PrayerModal';
@@ -40,8 +39,6 @@ const PrayerSubmission = () => {
 
   return (
     <>
-      <StarfieldBackground />
-      
       {/* Earth image positioned between starfield layers */}
       <img 
         src="/earth.png" 

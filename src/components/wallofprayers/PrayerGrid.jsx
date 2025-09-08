@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PrayerCard from './PrayerCard';
+import { useRenderPerformance } from '../../hooks/usePerformance';
 
-const PrayerGrid = ({ prayers, onCardClick, isLoading }) => {
+const PrayerGrid = React.memo(({ prayers, onCardClick, isLoading }) => {
+  // Track render performance
+  useRenderPerformance('PrayerGrid');
   if (isLoading) {
     // Loading skeleton
     return (
@@ -33,7 +36,9 @@ const PrayerGrid = ({ prayers, onCardClick, isLoading }) => {
       ))}
     </div>
   );
-};
+});
+
+PrayerGrid.displayName = 'PrayerGrid';
 
 PrayerGrid.propTypes = {
   prayers: PropTypes.arrayOf(PropTypes.object).isRequired,

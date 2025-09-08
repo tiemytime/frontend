@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
-const PrayerDetailModal = ({ prayer, isOpen, onClose }) => {
-  if (!isOpen || !prayer) return null;
-
-  const handleBackdropClick = (e) => {
+const PrayerDetailModal = React.memo(({ prayer, isOpen, onClose }) => {
+  const handleBackdropClick = useCallback((e) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
+  }, [onClose]);
+
+  const handleStopPropagation = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
+  if (!isOpen || !prayer) return null;
 
   return (
     <div 
@@ -16,7 +20,7 @@ const PrayerDetailModal = ({ prayer, isOpen, onClose }) => {
     >
       <div 
         className="bg-black/30 backdrop-blur-md border border-white/20 rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={handleStopPropagation}
       >
         {/* Header */}
         <div className="border-b border-white/20 pb-4 mb-6 relative">
@@ -91,6 +95,8 @@ const PrayerDetailModal = ({ prayer, isOpen, onClose }) => {
       </div>
     </div>
   );
-};
+});
+
+PrayerDetailModal.displayName = 'PrayerDetailModal';
 
 export default PrayerDetailModal;

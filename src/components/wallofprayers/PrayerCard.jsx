@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PrayerCard = ({ prayer, onClick }) => {
+const PrayerCard = React.memo(({ prayer, onClick }) => {
   return (
     <div 
       onClick={() => onClick(prayer)}
@@ -28,7 +28,9 @@ const PrayerCard = ({ prayer, onClick }) => {
       </div>
     </div>
   );
-};
+});
+
+PrayerCard.displayName = 'PrayerCard';
 
 PrayerCard.propTypes = {
   prayer: PropTypes.shape({

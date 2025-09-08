@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const WallHeader = ({ searchQuery, onSearchChange }) => {
+const WallHeader = React.memo(({ searchQuery, onSearchChange }) => {
   const navigate = useNavigate();
 
-  const handleLogoClick = () => {
+  const handleLogoClick = useCallback(() => {
     navigate('/globe');
-  };
+  }, [navigate]);
+
+  const handleSearchChange = useCallback((e) => {
+    onSearchChange(e.target.value);
+  }, [onSearchChange]);
 
   return (
     <div className="relative top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/60 via-black/40 to-transparent">
@@ -27,13 +31,15 @@ const WallHeader = ({ searchQuery, onSearchChange }) => {
             type="text" 
             placeholder="Search an event, write a keyword" 
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={handleSearchChange}
             className="bg-transparent text-white placeholder-gray-300 outline-none w-32 sm:w-48 md:w-64"
           />
         </div>
       </div>
     </div>
   );
-};
+});
+
+WallHeader.displayName = 'WallHeader';
 
 export default WallHeader;

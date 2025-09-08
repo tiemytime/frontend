@@ -1,94 +1,81 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import StarfieldBackground from '../components/background/Starfeildbackground';
+import React, { useEffect, useCallback } from 'react';
 import WallHeader from '../components/wallofprayers/WallHeader';
 import FilterTabs from '../components/wallofprayers/FilterTabs';
 import PrayerGrid from '../components/wallofprayers/PrayerGrid';
 import WallFooter from '../components/wallofprayers/WallFooter';
 import PrayerDetailModal from '../components/wallofprayers/PrayerDetailModal';
-import { allMockPrayers, filterCategories } from '../data/mockWallPrayers';
-import { useDebounce } from '../hooks/useDebounce';
+import usePrayerWallStore from '../stores/prayerWallStore';
+import { useModal } from '../hooks/useModal';
+import { useRenderPerformance } from '../hooks/usePerformance';
 import { ENV } from '../services/environment';
 
 const WallofPrayers = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  // Performance tracking
+  useRenderPerformance('WallofPrayers');
   
-  // Debounce search query for better performance
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  // Modal management
+  const prayerModal = useModal('prayer-detail');
   
-  const prayersPerPage = 12; // 3 rows of 4 items each
+  const {
+    // State from store
+    searchQuery,
+    activeFilter,
+    currentPage,
+    isLoading,
+    filterCategories,
+    filteredPrayers,
+    
+    // Actions from store
+    setSearchQuery,
+    setActiveFilter,
+    setCurrentPage,
+    
+    // Computed values from store
+    getPaginatedPrayers,
+    getTotalPages,
+    
+    // Load data
+    loadPrayers
+  } = usePrayerWallStore();
 
-  // Simulate loading on component mount
+  // Load prayers on component mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    loadPrayers();
+  }, [loadPrayers]);
 
-  // Filter and search prayers
-  const filteredPrayers = useMemo(() => {
-    let filtered = allMockPrayers;
+  const handleCloseModal = useCallback(() => {
+    prayerModal.close();
+  }, [prayerModal]);
 
-    // Apply category filter
-    if (activeFilter !== 'all') {
-      filtered = filtered.filter(prayer => prayer.category === activeFilter);
-    }
-
-    // Apply search query (debounced)
-    if (debouncedSearchQuery.trim()) {
-      const query = debouncedSearchQuery.toLowerCase();
-      filtered = filtered.filter(prayer => 
-        prayer.noteTitle.toLowerCase().includes(query) ||
-        prayer.eventTitle.toLowerCase().includes(query) ||
-        prayer.theme.toLowerCase().includes(query) ||
-        prayer.username.toLowerCase().includes(query) ||
-        prayer.prayerText.toLowerCase().includes(query)
-      );
-    }
-
-    return filtered;
-  }, [activeFilter, debouncedSearchQuery]);
-
-  // Paginate prayers
-  const paginatedPrayers = useMemo(() => {
-    const startIndex = (currentPage - 1) * prayersPerPage;
-    return filteredPrayers.slice(startIndex, startIndex + prayersPerPage);
-  }, [filteredPrayers, currentPage, prayersPerPage]);
-
-  // Reset to first page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeFilter, debouncedSearchQuery]);
-
-  const handleCardClick = (prayer) => {
-    setSelectedPrayer(prayer);
-    setShowDetailModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowDetailModal(false);
-    setSelectedPrayer(null);
-  };
-
-  const handleFilterChange = (filter) => {
+  const handleFilterChange = useCallback((filter) => {
     setActiveFilter(filter);
-  };
+  }, [setActiveFilter]);
 
-  const handleSearchChange = (query) => {
+  const handleSearchChange = useCallback((query) => {
     setSearchQuery(query);
-  };
+  }, [setSearchQuery]);
 
-  const totalPages = Math.ceil(filteredPrayers.length / prayersPerPage);
+  const handlePrayerSelect = useCallback((prayer) => {
+    prayerModal.open(prayer);
+  }, [prayerModal]);
+
+  const paginatedPrayers = getPaginatedPrayers();
+  const totalPages = getTotalPages();
+
+  // Debug info (if enabled)
+  if (ENV.DEBUG && window.PrayerApp) {
+    window.PrayerApp.setDebugData({
+      searchQuery,
+      activeFilter,
+      filteredCount: filteredPrayers.length,
+      paginatedCount: paginatedPrayers.length,
+      currentPage,
+      totalPages
+    });
+  }
 
   return (
     <>
-      <StarfieldBackground />
-      
       {/* Earth image positioned between starfield layers */}
       <img 
         src="/earth.png" 
@@ -126,7 +113,7 @@ const WallofPrayers = () => {
         {/* Prayer Grid */}
         <PrayerGrid
           prayers={paginatedPrayers}
-          onCardClick={handleCardClick}
+          onCardClick={handlePrayerSelect}
           isLoading={isLoading}
         />
 
@@ -134,7 +121,7 @@ const WallofPrayers = () => {
         {!isLoading && totalPages > 1 && (
           <div className="flex justify-center items-center space-x-4 px-8 lg:px-16 xl:px-24 mb-8">
             <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
               disabled={currentPage === 1}
               className="px-4 py-2 text-white border border-white/20 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-all duration-300"
             >
@@ -146,7 +133,7 @@ const WallofPrayers = () => {
             </span>
             
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-4 py-2 text-white border border-white/20 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-all duration-300"
             >
@@ -170,8 +157,8 @@ const WallofPrayers = () => {
 
       {/* Prayer Detail Modal */}
       <PrayerDetailModal
-        prayer={selectedPrayer}
-        isOpen={showDetailModal}
+        prayer={prayerModal.data}
+        isOpen={prayerModal.isOpen}
         onClose={handleCloseModal}
       />
     </>

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
-import StarfieldBackground from '../components/background/Starfeildbackground';
 import GlobeHeader from '../components/Globe/GlobeHeader';
 import GlobalPrayerDisplay from '../components/Globe/GlobalPrayerDisplay';
 import ShareLightButton from '../components/Globe/ShareLightButton';
@@ -109,9 +108,6 @@ const GlobeComponent = () => {
 
     return (
         <>
-            {/* Fixed Starfield Background */}
-            <StarfieldBackground />
-            
             {/* Globe Header */}
             <GlobeHeader />
             
