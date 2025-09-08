@@ -126,12 +126,13 @@ const GlobeComponent = () => {
                 alignItems: 'center',
                 overflow: 'hidden',
                 zIndex: 10,
-                background: 'radial-gradient(ellipse at center, rgba(37, 57, 97, 0.1) 0%, transparent 50%)'
+                background: 'transparent'
             }}>
                 <div className="globe" style={{
                     willChange: 'transform, opacity',
                     transform: 'translateZ(0)',
-                    filter: 'contrast(1.2) brightness(1.5) saturate(1.5)',
+                    filter: 'contrast(1.2) brightness(1.7) saturate(1.2)',
+                    clipPath: 'circle(50% at 50% 50%)',
                 }}>
                     <Globe
                         ref={globeRef}
@@ -142,10 +143,10 @@ const GlobeComponent = () => {
                         // Transparent background to show starfield
                         backgroundColor="rgba(0,0,0,0)"
                         
-                        // Reduced blue atmospheric glow
-                        // enableAtmosphere={true}
-                        // atmosphereAltitude={0.15}
-                        // atmosphereColor="rgba(100, 170, 255, 0.3)"
+                        // Completely disable atmospheric effects
+                        enableAtmosphere={true}
+                        atmosphereAltitude={0.07}
+                        atmosphereColor="rgba(225, 214, 214, 0.47)"
                         
                         // Brilliant golden country border lights like reference
                         hexPolygonsData={countryData}
