@@ -43,50 +43,55 @@ const GlobeComponent = () => {
             const globeInstance = globeRef.current;  
             
             // Start from far away position for "entering Earth" effect
-            globeInstance.pointOfView({ lat: 20, lng: 0, altitude: 8 }, 0);
+            globeInstance.pointOfView({ lat: 10, lng: 15, altitude: 6 }, 0);
             
-            // Smooth zoom into Earth - closer for larger globe
+            // Smooth zoom into Earth - optimal distance for dramatic view
             setTimeout(() => {
-                globeInstance.pointOfView({ lat: 20, lng: 0, altitude: 1.8 }, 3000);
+                globeInstance.pointOfView({ lat: 10, lng: 15, altitude: 2.2 }, 3000);
             }, 500);
             
             // Setup controls for smooth interaction
             const controls = globeInstance.controls();
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.3;
+            controls.autoRotateSpeed = 0.2; // Slower, more elegant rotation
             controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
+            controls.dampingFactor = 0.08; // Smoother damping
             controls.enableZoom = true;
-            controls.enablePan = false;
-            controls.minDistance = 150; // Allow closer zoom
-            controls.maxDistance = 1000;
+            controls.enablePan = true; // Allow panning for better exploration
+            controls.minDistance = 180; // Prevent getting too close
+            controls.maxDistance = 800; // Reasonable max distance
+            controls.rotateSpeed = 0.5; // Smooth manual rotation
+            controls.zoomSpeed = 0.8; // Controlled zoom speed
         }
     }, [globeReady]);
 
     const handleGlobeReady = () => {
         setGlobeReady(true);
         
-        // Globe entrance animation
+        // Globe entrance animation - more dramatic
         if (!hasAnimated.current) {
             hasAnimated.current = true;
             
             setTimeout(() => {
                 const globeCanvas = document.querySelector(".globe canvas");
                 if (globeCanvas) {
-                    // Set initial state - start invisible
+                    // Set initial state - dramatic entrance
                     gsap.set(".globe canvas", { 
                         opacity: 0,
+                        scale: 0.3,
                         transformOrigin: "center center"
                     });
                     
-                    // Fade in the globe smoothly
+                    // Dramatic zoom-in effect only
                     gsap.to(".globe canvas", {
                         opacity: 1,
-                        ease: "power2.out",
-                        duration: 2,
+                        scale: 1,
+                        ease: "power3.out",
+                        duration: 2.5,
+                        delay: 0.3
                     });
                 }
-            }, 200);
+            }, 100);
         }
     };
 
@@ -120,44 +125,59 @@ const GlobeComponent = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 overflow: 'hidden',
-                zIndex: 10
+                zIndex: 10,
+                background: 'radial-gradient(ellipse at center, rgba(37, 57, 97, 0.1) 0%, transparent 50%)'
             }}>
                 <div className="globe" style={{
                     willChange: 'transform, opacity',
                     transform: 'translateZ(0)',
+                    filter: 'contrast(1.2) brightness(1.5) saturate(1.5)',
                 }}>
                     <Globe
                         ref={globeRef}
-                        // Night-time Earth with city lights
+                        // Dark, realistic Earth appearance - using night texture with enhancements
                         globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
                         bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
                         
                         // Transparent background to show starfield
                         backgroundColor="rgba(0,0,0,0)"
                         
-                        // No atmospheric glow to blend with starfield
-                        enableAtmosphere={false}
-                        atmosphereAltitude={0}
-                        atmosphereColor="rgba(0,0,0,0)"
+                        // Reduced blue atmospheric glow
+                        // enableAtmosphere={true}
+                        // atmosphereAltitude={0.15}
+                        // atmosphereColor="rgba(100, 170, 255, 0.3)"
                         
-                        // Elegant fading golden dots for country borders
+                        // Brilliant golden country border lights like reference
                         hexPolygonsData={countryData}
-                        hexPolygonResolution={3}
-                        hexPolygonMargin={0.7}
+                        hexPolygonResolution={6}
+                        hexPolygonMargin={0.1}
                         hexPolygonUseDots={true}
-                        hexPolygonColor={() => `rgba(255, 215, 0, ${Math.random() * 0.4 + 0.1})`}
-                        hexPolygonAltitude={0.002}
+                        hexPolygonColor={() => {
+                            const intensity = Math.random() * 0.2 + 1.4; // 1.4 to 1.6 intensity - maximum bright
+                            const brightness = Math.random() * 20 + 250; // 250-270 brightness - brilliant
+                            const golden = Math.random() * 15 + 220; // Strong golden component
+                            return `rgba(${brightness}, ${golden}, 120, ${intensity})`;
+                        }}
+                        hexPolygonAltitude={0.015}
                         
                         // Remove old polygon borders
                         polygonsData={[]}
                         
-                        // News markers - golden yellow lights
+                        // Bright, glowing event markers
                         pointsData={mockNewsData}
                         pointLat={d => d.lat}
                         pointLng={d => d.lng}
-                        pointColor={() => 'rgba(255, 215, 0, 0.9)'}
-                        pointAltitude={0.01}
-                        pointRadius={0.8}
+                        pointColor={() => {
+                            const colors = [
+                                'rgba(255, 255, 255, 1.0)', // Pure bright white
+                                'rgba(255, 250, 220, 1.0)', // Brilliant warm white
+                                'rgba(255, 240, 180, 1.0)', // Bright golden white
+                                'rgba(255, 215, 0, 1.0)'    // Pure gold
+                            ];
+                            return colors[Math.floor(Math.random() * colors.length)];
+                        }}
+                        pointAltitude={0.015}
+                        pointRadius={0.5}
                         onPointClick={handleMarkerClick}
                         pointLabel={d => d.eventTitle}
                         

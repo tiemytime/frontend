@@ -4,3 +4,16 @@
 body {
   font-family: 'Marcellus', serif;
 }
+
+/* Reduced lighting effects for cleaner globe appearance */
+.globe canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Subtle lighting enhancement - much more minimal */
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* Globe container without glow effects */
+.globe {
+  position: relative;
+}
