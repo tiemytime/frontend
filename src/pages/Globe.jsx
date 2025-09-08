@@ -192,8 +192,8 @@ const GlobeComponent = () => {
                         onGlobeReady={handleGlobeReady}
                         
                         // Size
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={window.innerWidth*1.1}
+                        height={window.innerHeight*1.1}
                     />
                 </div>
             </div>

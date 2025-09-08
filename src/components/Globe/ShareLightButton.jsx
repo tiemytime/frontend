@@ -1,10 +1,10 @@
 const ShareLightButton = ({ onClick, isLoading }) => {
   return (
-    <div className="fixed top-1/2 right-16 transform -translate-y-1/2 z-20">
+    <div className="fixed top-1/2 right-50 transform -translate-y-1/2 z-20">
       <button
         onClick={onClick}
         disabled={isLoading}
-        className="bg-yellow-400/10 backdrop-blur-sm border-2 border-yellow-400 text-yellow-400 px-8 py-4 rounded-lg font-marcellus text-lg hover:bg-yellow-400/20 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-yellow-400/10 backdrop-blur-sm border border-yellow-400 text-yellow-400 px-6 py-3 rounded font-marcellus text-base hover:bg-yellow-200/10 transition-all duration-300 transform hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <span className="flex items-center gap-2">

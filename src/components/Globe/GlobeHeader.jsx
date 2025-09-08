@@ -11,8 +11,8 @@ const GlobeHeader = () => {
     <div className="fixed top-0 left-0 right-0 z-[15] flex justify-between items-center p-6 pointer-events-none">
       {/* Logo */}
       <div className="flex flex-col items-center pointer-events-auto">
-        <img src="/logo.png" alt="Logo" className="w-14 h-14 mb-2" />
-        <div className="text-white font-marcellus text-sm leading-tight text-center">
+        <img src="/logo.png" alt="Logo" className="w-15 h-15 mb-2" />
+        <div className="text-white font-marcellus text-lg leading-[1.4] text-center">
           <div>One prayer</div>
           <div>One world</div>
         </div>

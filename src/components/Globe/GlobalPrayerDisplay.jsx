@@ -27,14 +27,22 @@ const GlobalPrayerDisplay = ({ mostRelevantEvent, shortPrayer, isLoading }) => {
   }
 
   return (
-    <div className="fixed top-1/2 left-1/4 transform -translate-x-1/2 -translate-y-1/2 z-20 text-left max-w-lg">
-      <div className="text-white/80 font-marcellus text-xl mb-4 tracking-wide">
-        The world is praying for ...
+    <>
+      {/* "The world is praying for..." on the left */}
+      <div className="fixed top-1/2 left-50 transform -translate-y-1/2 z-20 text-left">
+        <div className="text-white/90 font-marcellus text-xl tracking-wide flex items-center">
+          The world is praying for ...
+          <span className="ml-3 text-white/60">→</span>
+        </div>
       </div>
-      <div className="text-yellow-400 font-marcellus text-2xl leading-relaxed tracking-wide">
-        {displayText}
+      
+      {/* Prayer text centered over the globe */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-center">
+        <div className="text-yellow-400 font-marcellus text-xl leading-relaxed tracking-wide">
+          {displayText}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

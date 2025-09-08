@@ -4,6 +4,7 @@ import Loading from './pages/Loading'
 import Globe from './pages/Globe'
 import PrayerSubmission from './pages/PrayerSubmission'
 import WallofPrayers from './pages/WallofPrayers'
+import PrayerDetailPage from './pages/PrayerDetailPage'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PersistentStarfield from './components/background/PersistentStarfield'
 import { useSessionTracking } from './hooks/useSession'
@@ -22,6 +23,7 @@ const AppContent = () => {
       <Route path="/globe" element={<Globe />} />
       <Route path="/prayer-submission" element={<PrayerSubmission />} />
       <Route path="/wall-of-prayers" element={<WallofPrayers />} />
+      <Route path="/prayer-detail" element={<PrayerDetailPage />} />
     </Routes>
   );
 };

@@ -16,7 +16,7 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
       onClick={handleBackdropClick}
     >
       <div 
-        className="bg-black/20 backdrop-blur-md border border-white/20 rounded-lg p-6 w-80 max-h-[80vh] overflow-y-auto shadow-2xl"
+        className="bg-black/20 backdrop-blur-md border border-white/20 rounded-lg p-6 w-90 max-h-[62vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         {/* Header */}

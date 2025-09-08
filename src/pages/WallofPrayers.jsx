@@ -1,11 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import WallHeader from '../components/wallofprayers/WallHeader';
 import FilterTabs from '../components/wallofprayers/FilterTabs';
 import PrayerGrid from '../components/wallofprayers/PrayerGrid';
 import WallFooter from '../components/wallofprayers/WallFooter';
-import PrayerDetailModal from '../components/wallofprayers/PrayerDetailModal';
 import usePrayerWallStore from '../stores/prayerWallStore';
-import { useModal } from '../hooks/useModal';
 import { useRenderPerformance } from '../hooks/usePerformance';
 import { ENV } from '../services/environment';
 
@@ -13,8 +12,8 @@ const WallofPrayers = () => {
   // Performance tracking
   useRenderPerformance('WallofPrayers');
   
-  // Modal management
-  const prayerModal = useModal('prayer-detail');
+  // Navigation
+  const navigate = useNavigate();
   
   const {
     // State from store
@@ -43,10 +42,6 @@ const WallofPrayers = () => {
     loadPrayers();
   }, [loadPrayers]);
 
-  const handleCloseModal = useCallback(() => {
-    prayerModal.close();
-  }, [prayerModal]);
-
   const handleFilterChange = useCallback((filter) => {
     setActiveFilter(filter);
   }, [setActiveFilter]);
@@ -56,8 +51,9 @@ const WallofPrayers = () => {
   }, [setSearchQuery]);
 
   const handlePrayerSelect = useCallback((prayer) => {
-    prayerModal.open(prayer);
-  }, [prayerModal]);
+    // Navigate to prayer detail page instead of opening modal
+    navigate('/prayer-detail', { state: { prayer } });
+  }, [navigate]);
 
   const paginatedPrayers = getPaginatedPrayers();
   const totalPages = getTotalPages();
@@ -154,13 +150,6 @@ const WallofPrayers = () => {
 
       {/* Footer */}
       <WallFooter totalCount={filteredPrayers.length} />
-
-      {/* Prayer Detail Modal */}
-      <PrayerDetailModal
-        prayer={prayerModal.data}
-        isOpen={prayerModal.isOpen}
-        onClose={handleCloseModal}
-      />
     </>
   );
 }
