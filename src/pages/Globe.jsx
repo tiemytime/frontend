@@ -3,6 +3,7 @@ import Globe from 'react-globe.gl';
 import GlobeHeader from '../components/Globe/GlobeHeader';
 import GlobalPrayerDisplay from '../components/Globe/GlobalPrayerDisplay';
 import SharePrayerButton from '../components/Globe/SharePrayerButton';
+import EventPrayerOverlay from '../components/Globe/EventPrayerOverlay';
 import { gsap } from 'gsap';
 import { mockNewsData } from '../data/mockNews';
 import { mockPrayerData } from '../data/mockPrayers';
@@ -98,6 +99,14 @@ const GlobeComponent = () => {
     const handleMarkerClick = (event) => {
         setSelectedEvent(event);
         setShowEventModal(true);
+    };
+
+    const handleCloseEventModal = () => {
+        setShowEventModal(false);
+        // Small delay to allow audio to stop gracefully
+        setTimeout(() => {
+            setSelectedEvent(null);
+        }, 300);
     };
 
     const handleSharePrayer = (event) => {
@@ -199,19 +208,26 @@ const GlobeComponent = () => {
             </div>
             
             {/* Global Prayer Display */}
-            <GlobalPrayerDisplay />
+            <GlobalPrayerDisplay hidden={showEventModal} />
             
             {/* Share Prayer Button */}
             <SharePrayerButton 
                 onSharePrayer={handleSharePrayer}
                 isLoading={false}
+                hidden={showEventModal}
+            />
+
+            {/* Event Prayer Overlay - appears when event modal is open */}
+            <EventPrayerOverlay 
+                event={selectedEvent}
+                isVisible={showEventModal}
             />
             
             {/* Event Details Modal */}
             <NewsModal 
                 event={selectedEvent}
                 isOpen={showEventModal}
-                onClose={() => setShowEventModal(false)}
+                onClose={handleCloseEventModal}
                 onSharePrayer={handleSharePrayer}
             />
             

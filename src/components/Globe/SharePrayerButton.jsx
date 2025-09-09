@@ -1,7 +1,7 @@
 import React from 'react';
 import useGlobalPrayerStore from '../../stores/globalPrayerStore';
 
-const SharePrayerButton = ({ onSharePrayer, isLoading }) => {
+const SharePrayerButton = ({ onSharePrayer, isLoading, hidden = false }) => {
   const { topRelevanceEvent } = useGlobalPrayerStore();
 
   const handleSharePrayer = () => {
@@ -9,6 +9,11 @@ const SharePrayerButton = ({ onSharePrayer, isLoading }) => {
       onSharePrayer(topRelevanceEvent);
     }
   };
+
+  // Don't render if hidden
+  if (hidden) {
+    return null;
+  }
 
   return (
     <div className="fixed top-1/2 right-50 transform -translate-y-1/2 z-20">

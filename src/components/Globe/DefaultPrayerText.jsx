@@ -85,7 +85,7 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
       {/* Prayer Header */}
       <div className="flex items-center space-x-2 mb-3">
         <span className="text-yellow-400">🕯️</span>
-        <h4 className="text-white font-marcellus text-sm">Default Prayer</h4>
+        {/* <h4 className="text-white font-marcellus text-sm">Default Prayer</h4> */}
         {prayerData.generatedAt && (
           <span className="text-gray-400 text-xs">
             • {new Date(prayerData.generatedAt).toLocaleDateString()}
@@ -101,10 +101,10 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
       {/* Prayer Footer */}
       <div className="mt-3 pt-3 border-t border-white/10">
         <div className="flex items-center justify-between text-xs text-gray-400">
-          <span>AI Generated Prayer</span>
-          {prayerData.duration && (
-            <span>~{prayerData.duration}s reading time</span>
-          )}
+          {/* <span>AI Generated Prayer</span> */}
+          {/* {prayerData.duration && (
+            // <span>~{prayerData.duration}s reading time</span>
+          )} */}
         </div>
       </div>
     </div>

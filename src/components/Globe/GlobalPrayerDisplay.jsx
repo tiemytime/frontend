@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useGlobalPrayerStore from '../../stores/globalPrayerStore';
 
-const GlobalPrayerDisplay = () => {
+const GlobalPrayerDisplay = ({ hidden = false }) => {
   const {
     currentGlobalPrayer,
     isLoading,
@@ -31,6 +31,11 @@ const GlobalPrayerDisplay = () => {
       setDisplayText(currentGlobalPrayer);
     }
   }, [currentGlobalPrayer]);
+
+  // Don't render if hidden
+  if (hidden) {
+    return null;
+  }
 
   // Loading state
   if (isLoading && !displayText) {
