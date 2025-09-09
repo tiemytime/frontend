@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import useGlobalPrayerStore from '../../stores/globalPrayerStore';
 
-const GlobalPrayerDisplay = ({ onSharePrayer }) => {
+const GlobalPrayerDisplay = () => {
   const {
     currentGlobalPrayer,
-    topRelevanceEvent,
     isLoading,
     error,
-    fetchGlobalPrayer,
     startAutoRefresh,
     stopAutoRefresh,
-    clearError
+    clearError,
+    fetchGlobalPrayer
   } = useGlobalPrayerStore();
 
   const [displayText, setDisplayText] = useState(currentGlobalPrayer);
@@ -32,13 +31,6 @@ const GlobalPrayerDisplay = ({ onSharePrayer }) => {
       setDisplayText(currentGlobalPrayer);
     }
   }, [currentGlobalPrayer]);
-
-  // Handle share prayer click
-  const handleSharePrayer = () => {
-    if (topRelevanceEvent && onSharePrayer) {
-      onSharePrayer(topRelevanceEvent);
-    }
-  };
 
   // Loading state
   if (isLoading && !displayText) {
@@ -87,24 +79,15 @@ const GlobalPrayerDisplay = ({ onSharePrayer }) => {
         </div>
       </div>
       
-      {/* Prayer text and share button centered over the globe */}
+      {/* Prayer text centered over the globe */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-center">
         {/* Prayer Text */}
-        <div className="text-yellow-400 font-marcellus text-xl leading-relaxed tracking-wide mb-4">
+        <div className="text-yellow-400 font-marcellus text-xl leading-relaxed tracking-wide">
           {displayText}
           {isLoading && displayText && (
             <span className="ml-2 text-yellow-400/60 animate-pulse">↻</span>
           )}
         </div>
-        
-        {/* Share Prayer Button */}
-        <button
-          onClick={handleSharePrayer}
-          disabled={!topRelevanceEvent}
-          className="border border-yellow-400 text-yellow-400 bg-yellow-400/10 backdrop-blur-sm px-4 py-2 rounded font-marcellus hover:bg-yellow-400/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        >
-          Share your prayer
-        </button>
         
         {/* Error indicator */}
         {error && displayText && (

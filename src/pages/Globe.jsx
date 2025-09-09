@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
 import GlobeHeader from '../components/Globe/GlobeHeader';
 import GlobalPrayerDisplay from '../components/Globe/GlobalPrayerDisplay';
-import ShareLightButton from '../components/Globe/ShareLightButton';
+import SharePrayerButton from '../components/Globe/SharePrayerButton';
 import { gsap } from 'gsap';
 import { mockNewsData } from '../data/mockNews';
 import { mockPrayerData } from '../data/mockPrayers';
@@ -199,13 +199,11 @@ const GlobeComponent = () => {
             </div>
             
             {/* Global Prayer Display */}
-            <GlobalPrayerDisplay 
-                onSharePrayer={handleSharePrayer}
-            />
+            <GlobalPrayerDisplay />
             
-            {/* Share Light Button */}
-            <ShareLightButton 
-                onClick={testPrayerSubmission}
+            {/* Share Prayer Button */}
+            <SharePrayerButton 
+                onSharePrayer={handleSharePrayer}
                 isLoading={false}
             />
             
