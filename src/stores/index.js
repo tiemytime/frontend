@@ -4,3 +4,5 @@ export { default as usePrayerWallStore } from './prayerWallStore';
 export { default as useSessionStore } from './sessionStore';
 export { default as useModalStore } from './modalStore';
 export { default as usePerformanceStore } from './performanceStore';
+export { default as useGlobalPrayerStore } from './globalPrayerStore';
+export { default as useAudioPlayerStore } from './audioPlayerStore';

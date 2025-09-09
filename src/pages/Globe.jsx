@@ -191,18 +191,16 @@ const GlobeComponent = () => {
                         // Globe ready callback
                         onGlobeReady={handleGlobeReady}
                         
-                        // Size
-                        width={window.innerWidth*1.1}
-                        height={window.innerHeight*1.1}
+                        // Size - Responsive 
+                        width={Math.min(window.innerWidth * 1.2,1500)}
+                        height={Math.min(window.innerHeight * 1.2,1500)}
                     />
                 </div>
             </div>
             
             {/* Global Prayer Display */}
             <GlobalPrayerDisplay 
-                mostRelevantEvent={null}
-                shortPrayer="Gaza victims and families"
-                isLoading={false}
+                onSharePrayer={handleSharePrayer}
             />
             
             {/* Share Light Button */}
@@ -229,9 +227,9 @@ const GlobeComponent = () => {
             {/* Test Button for Prayer Submission Page */}
             <button 
                 onClick={testPrayerSubmission}
-                className="fixed bottom-4 right-4 z-50 bg-yellow-400/20 backdrop-blur-sm border border-yellow-400 text-yellow-400 px-4 py-2 rounded font-marcellus hover:bg-yellow-400/30 transition-all duration-300"
+                className="fixed bottom-4 right-4 z-50 bg-yellow-400/20 backdrop-blur-sm border border-yellow-400 text-yellow-400 px-3 py-2 sm:px-4 sm:py-2 rounded font-marcellus hover:bg-yellow-400/30 transition-all duration-300 text-xs sm:text-sm"
             >
-                Test Prayer Submission
+                Test Prayer
             </button>
         </>
     );

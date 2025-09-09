@@ -49,11 +49,21 @@ const PrayerSubmission = () => {
           zIndex: -12
         }}
       />
+
+      <img 
+        src="/redlight.png" 
+        alt="Red Light" 
+        className="fixed top-0 left-0 w-full h-full object-cover opacity-70"
+        style={{ 
+          pointerEvents: 'none',
+          zIndex: -11
+        }}
+      />
       
       {/* Two-panel layout - responsive */}
-      <div className="min-h-screen flex flex-col lg:flex-row">
+      <div className="min-h-screen flex flex-col lg:flex-row pt-20 sm:pt-24">
         {/* Left Panel - Prayer Card */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2 px-4 sm:px-6 lg:px-8">
           <LeftPanel 
             prayer={prayer}
             userDetails={userDetails}
@@ -62,33 +72,33 @@ const PrayerSubmission = () => {
         </div>
         
         {/* Right Panel - Share Button */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2 px-4 sm:px-6 lg:px-8">
           <RightPanel onShare={handleShare} />
         </div>
       </div>
 
       {/* Header Navigation */}
-      <div className="fixed top-0 left-0 right-0 z-20 flex flex-col sm:flex-row justify-between items-center p-4 sm:p-8">
-        <div className="flex items-center mb-4 sm:mb-0">
-          <img src="/logo.png" alt="Logo" className="w-16 h-16 mr-4" />
-          <div className="text-white font-marcellus">
+      <div className="fixed top-0 left-0 right-0 z-20 flex flex-col sm:flex-row justify-between items-center p-4 sm:p-8 gap-4 sm:gap-0">
+        <div className="flex items-center">
+          <img src="/logo.png" alt="Logo" className="w-12 h-12 sm:w-16 sm:h-16 mr-3 sm:mr-4" />
+          <div className="text-white font-marcellus text-sm sm:text-base">
             <div>One prayer</div>
             <div>One world</div>
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
           <button 
             onClick={handleGoToWall}
-            className="text-white font-marcellus hover:text-yellow-400 transition-colors duration-300"
+            className="text-white font-marcellus hover:text-yellow-400 transition-colors duration-300 text-sm sm:text-base order-2 sm:order-1"
           >
             Wall of Prayers
           </button>
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded px-4 py-2">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded px-3 py-2 sm:px-4 sm:py-2 w-full sm:w-auto order-1 sm:order-2">
             <input 
               type="text" 
               placeholder="Search an event, write a keyword" 
-              className="bg-transparent text-white placeholder-gray-300 outline-none w-32 sm:w-48 md:w-64"
+              className="bg-transparent text-white placeholder-gray-300 outline-none w-full sm:w-48 md:w-64 text-sm"
             />
           </div>
         </div>

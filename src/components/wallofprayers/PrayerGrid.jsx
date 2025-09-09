@@ -9,7 +9,7 @@ const PrayerGrid = React.memo(({ prayers, onCardClick, isLoading }) => {
   if (isLoading) {
     // Loading skeleton
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8 lg:px-16 xl:px-24 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-8 lg:px-16 xl:px-24 mb-8">
         {Array.from({ length: 12 }).map((_, index) => (
           <div
             key={index}
@@ -26,7 +26,7 @@ const PrayerGrid = React.memo(({ prayers, onCardClick, isLoading }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8 lg:px-16 xl:px-24 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-8 lg:px-16 xl:px-24 mb-8">
       {prayers.map((prayer) => (
         <PrayerCard
           key={prayer.id}

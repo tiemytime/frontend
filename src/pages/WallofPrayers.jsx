@@ -92,12 +92,12 @@ const WallofPrayers = () => {
       {/* Main Content */}
       <div className="min-h-screen pb-32">
         {/* Wall of Prayers Title - Scrollable */}
-        <div className="text-center mb-8">
-          <h1 className="text-white font-marcellus text-4xl">Wall of Prayers</h1>
+        <div className="text-center mb-6 sm:mb-8 px-4">
+          <h1 className="text-white font-marcellus text-2xl sm:text-3xl md:text-4xl">Wall of Prayers</h1>
         </div>
         
         {/* Event Title and Filter Tabs Combined */}
-        <div className="px-8 lg:px-16 xl:px-24 mb-12">
+        <div className="px-4 sm:px-8 lg:px-16 xl:px-24 mb-8 sm:mb-12">
           {/* Filter Tabs */}
           <FilterTabs
             activeFilter={activeFilter}

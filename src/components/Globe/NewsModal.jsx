@@ -1,4 +1,6 @@
 import React from 'react';
+import AudioPrayerPlayer from './AudioPrayerPlayer';
+import DefaultPrayerText from './DefaultPrayerText';
 
 const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
   if (!isOpen || !event) return null;
@@ -12,16 +14,16 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-start pl-4"
+      className="fixed inset-0 z-50 top-[150px] flex items-center justify-start w-[600px] h-[600px] p-4"
       onClick={handleBackdropClick}
     >
       <div 
-        className="bg-black/20 backdrop-blur-md border border-white/20 rounded-lg p-6 w-90 max-h-[62vh] overflow-y-auto shadow-2xl"
+        className="bg-black/20 backdrop-blur-md border border-white/20 rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md max-h-[80vh] sm:max-h-[70vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         {/* Header */}
         <div className="border-b border-white/20 pb-2 mb-4 relative">
-          <h3 className="text-white font-marcellus text-lg">EVENT TITLE</h3>
+          <h3 className="text-white font-marcellus text-base sm:text-lg">EVENT TITLE</h3>
           <button 
             onClick={onClose}
             className="absolute top-0 right-0 text-gray-300 hover:text-white text-xl"
@@ -31,7 +33,7 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
         </div>
         
         {/* Event details */}
-        <div className="space-y-4 text-gray-200 text-sm">
+        <div className="space-y-3 sm:space-y-4 text-gray-200 text-xs sm:text-sm">
           <div>
             <p className="text-white mb-2">{event.eventTitle}</p>
             <p className="leading-relaxed">{event.description}</p>
@@ -68,6 +70,16 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Audio Prayer Player */}
+        <div className="mt-6">
+          <AudioPrayerPlayer eventId={event.id} autoPlay={true} />
+        </div>
+
+        {/* Default Prayer Text */}
+        <div className="mt-4">
+          <DefaultPrayerText eventId={event.id} />
         </div>
         
         {/* Join Prayer Button */}

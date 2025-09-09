@@ -1,5 +1,5 @@
 // AI Prayer Generation API service using OpenAI
-import { apiClient, isMockMode, handleAPIError } from './api.js';
+import { apiClient, isMockMode, handleAPIError, APIError } from './api.js';
 import { ENV } from './environment.js';
 
 /**
@@ -280,6 +280,84 @@ export const aiPrayerAPI = {
       return response;
     } catch (error) {
       const errorInfo = handleAPIError(error, 'Failed to generate short prayer');
+      throw errorInfo;
+    }
+  },
+
+  /**
+   * Generate global prayer for globe display
+   */
+  async generateGlobalPrayer(eventData, maxLength = 50) {
+    const validationErrors = validatePrayerData(
+      { eventTitle: eventData.eventTitle, eventCategory: eventData.category },
+      { eventTitle: AIPrayerSchema.generatePrayer.eventTitle, eventCategory: AIPrayerSchema.generatePrayer.eventCategory }
+    );
+
+    if (validationErrors.length > 0) {
+      throw new APIError('Validation failed', 400, { errors: validationErrors });
+    }
+
+    if (isMockMode()) {
+      // Mock short global prayer
+      const mockShortPrayer = {
+        id: `global_prayer_${eventData.id}`,
+        eventId: eventData.id,
+        shortPrayer: `${eventData.location} needs our prayers`,
+        fullPrayer: `May peace and healing reach all those affected by ${eventData.eventTitle} in ${eventData.location}.`,
+        generatedAt: new Date().toISOString()
+      };
+      
+      await new Promise(resolve => setTimeout(resolve, 800));
+      return { data: mockShortPrayer, success: true };
+    }
+
+    try {
+      const response = await apiClient.post(AI_PRAYER_ENDPOINTS.GENERATE_PRAYER, {
+        eventId: eventData.id,
+        eventTitle: eventData.eventTitle,
+        eventCategory: eventData.category,
+        location: eventData.location,
+        prayerType: 'global',
+        maxLength,
+        tone: 'compassionate'
+      });
+      return response;
+    } catch (error) {
+      const errorInfo = handleAPIError(error, 'Failed to generate global prayer');
+      throw errorInfo;
+    }
+  },
+
+  /**
+   * Generate audio prayer via TTS
+   */
+  async generateAudioPrayer(eventData, options = {}) {
+    const { voice = 'default', speed = 1.0, format = 'mp3' } = options;
+
+    if (isMockMode()) {
+      // Mock audio generation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return { 
+        data: { 
+          audioUrl: `/audio/generated_prayer_${eventData.id}.mp3`,
+          duration: 45,
+          generatedAt: new Date().toISOString()
+        }, 
+        success: true 
+      };
+    }
+
+    try {
+      const response = await apiClient.post('/api/ai/generate-audio-prayer', {
+        eventId: eventData.id,
+        prayerText: eventData.prayerText,
+        voice,
+        speed,
+        format
+      });
+      return response;
+    } catch (error) {
+      const errorInfo = handleAPIError(error, 'Failed to generate audio prayer');
       throw errorInfo;
     }
   },

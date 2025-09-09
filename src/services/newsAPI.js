@@ -3,7 +3,7 @@ import { apiClient, isMockMode, handleAPIError } from './api.js';
 import { ENV } from './environment.js';
 
 // Mock data imports
-import { mockNews } from '../data/mockNews.js';
+import { mockNewsData } from '../data/mockNews.js';
 
 /**
  * News API endpoints
@@ -23,7 +23,7 @@ const mockNewsAPI = {
   async getAllNews(params = {}) {
     await new Promise(resolve => setTimeout(resolve, 400));
     
-    let news = [...mockNews];
+    let news = [...mockNewsData];
     
     // Apply search filter
     if (params.search) {
@@ -63,7 +63,7 @@ const mockNewsAPI = {
   async getNewsById(id) {
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    const newsItem = mockNews.find(item => item.id === id);
+    const newsItem = mockNewsData.find(item => item.id === id);
     if (!newsItem) {
       throw new Error('News item not found');
     }
@@ -74,7 +74,7 @@ const mockNewsAPI = {
   async getLatestNews(limit = 5) {
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    const sortedNews = [...mockNews]
+    const sortedNews = [...mockNewsData]
       .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
       .slice(0, limit);
     
@@ -84,7 +84,7 @@ const mockNewsAPI = {
   async getNewsCategories() {
     await new Promise(resolve => setTimeout(resolve, 200));
     
-    const categories = [...new Set(mockNews.map(item => item.category))];
+    const categories = [...new Set(mockNewsData.map(item => item.category))];
     
     return { data: categories };
   },
@@ -212,6 +212,88 @@ export const newsAPI = {
       return response;
     } catch (error) {
       const errorInfo = handleAPIError(error, 'Failed to filter news');
+      throw errorInfo;
+    }
+  },
+
+  /**
+   * Get event with highest relevance score for global prayer display
+   */
+  async getTopRelevanceEvent() {
+    if (isMockMode()) {
+      // Return event with highest relevance from mock data
+      const topEvent = mockNewsData.reduce((highest, current) => 
+        (current.relevance === 'Critical' || current.relevance === 'High') && 
+        (!highest || current.relevance === 'Critical') ? current : highest
+      );
+      
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return { data: topEvent, success: true };
+    }
+
+    try {
+      const response = await apiClient.get(NEWS_ENDPOINTS.NEWS_LATEST, {
+        sortBy: 'relevance',
+        limit: 1
+      });
+      return response;
+    } catch (error) {
+      const errorInfo = handleAPIError(error, 'Failed to fetch top relevance event');
+      throw errorInfo;
+    }
+  },
+
+  /**
+   * Get default prayer for a specific event
+   */
+  async getEventDefaultPrayer(eventId) {
+    if (isMockMode()) {
+      // Mock default prayer based on event
+      const event = mockNewsData.find(e => e.id === eventId);
+      if (!event) throw new Error('Event not found');
+      
+      const mockPrayer = {
+        id: `prayer_${eventId}`,
+        eventId,
+        prayerText: `May peace and healing reach all those affected by ${event.eventTitle}. We send our collective love and support to ${event.location}.`,
+        audioUrl: `/audio/prayer_${eventId}.mp3`, // Mock audio URL
+        duration: 45, // seconds
+        generatedAt: new Date().toISOString()
+      };
+      
+      await new Promise(resolve => setTimeout(resolve, 400));
+      return { data: mockPrayer, success: true };
+    }
+
+    try {
+      const response = await apiClient.get(`${NEWS_ENDPOINTS.NEWS_BY_ID(eventId)}/default-prayer`);
+      return response;
+    } catch (error) {
+      const errorInfo = handleAPIError(error, 'Failed to fetch event default prayer');
+      throw errorInfo;
+    }
+  },
+
+  /**
+   * Get audio prayer URL for event
+   */
+  async getEventAudioPrayer(eventId) {
+    if (isMockMode()) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+      return { 
+        data: { 
+          audioUrl: `/audio/prayer_${eventId}.mp3`,
+          duration: 45
+        }, 
+        success: true 
+      };
+    }
+
+    try {
+      const response = await apiClient.get(`${NEWS_ENDPOINTS.NEWS_BY_ID(eventId)}/audio-prayer`);
+      return response;
+    } catch (error) {
+      const errorInfo = handleAPIError(error, 'Failed to fetch event audio prayer');
       throw errorInfo;
     }
   },

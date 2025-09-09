@@ -5,6 +5,7 @@ export { authAPI, AuthSchema } from './authAPI.js';
 export { newsAPI } from './newsAPI.js';
 export { eventAPI, EventSchema } from './eventAPI.js';
 export { aiPrayerAPI, AIPrayerSchema, PRAYER_OPTIONS } from './aiPrayerAPI.js';
+export { audioAPI, AudioPlayer } from './audioAPI.js';
 export { userSessionAPI, JOURNEY_STATES } from './userSessionAPI.js';
 export { globeAPI } from './globeAPI.js';
 export { 
