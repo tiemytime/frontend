@@ -12,7 +12,7 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 top-[150px] flex items-center justify-start w-[500px] h-[500px] p-4"
+      className="fixed inset-0 z-50 top-[140px] flex items-center justify-start w-[500px] h-[500px] p-4"
       onClick={handleBackdropClick}
     >
       <div 
@@ -34,35 +34,35 @@ const NewsModal = ({ event, isOpen, onClose, onSharePrayer }) => {
         </div>
         
         {/* Event details */}
-        <div className="space-y-2 text-gray-200 text-xs">
+        <div className="space-y-2 text-gray-200 text-[14px]">
           <div>
-            <p className="text-white mb-1 text-sm">{event.eventTitle}</p>
-            <p className="leading-relaxed text-xs">{event.description}</p>
+            <p className="text-white mb-1 text-[16px]">{event.eventTitle}</p>
+            <p className="leading-relaxed text-[16px]">{event.description}</p>
           </div>
           
           <div>
-            <span className="text-gray-300 text-xs">Location</span>
-            <p className="text-white text-xs">{event.location}</p>
+            <span className="text-gray-300 text-[16px]">Location</span>
+            <p className="text-white text-[16px]">{event.location}</p>
           </div>
           
           <div>
-            <span className="text-gray-300 text-xs">Relevance</span>
-            <p className="text-white text-xs">{event.relevance}</p>
+            <span className="text-gray-300 text-[16px]">Relevance</span>
+            <p className="text-white text-[16px]">{event.relevance}</p>
           </div>
           
           <div>
-            <span className="text-gray-300 text-xs">Category</span>
-            <p className="text-white text-xs">{event.category}</p>
+            <span className="text-gray-300 text-[16px]">Category</span>
+            <p className="text-white text-[16px]">{event.category}</p>
           </div>
           
           <div>
-            <span className="text-gray-300 text-xs">Sources</span>
-            <p className="text-white text-xs">{event.sources}</p>
+            <span className="text-gray-300 text-[16px]">Sources</span>
+            <p className="text-white text-[16px]">{event.sources}</p>
           </div>
           
           {/* Links */}
           <div>
-            <span className="text-gray-300 text-xs">Links</span>
+            <span className="text-gray-300 text-[16px]">Links</span>
             <div className="space-y-1 mt-1">
               {event.links.slice(0, 2).map((link, index) => (
                 <p key={index} className="text-blue-300 cursor-pointer hover:text-blue-200 text-xs">

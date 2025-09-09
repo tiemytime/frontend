@@ -23,15 +23,13 @@ const WallofPrayers = () => {
     isLoading,
     filterCategories,
     filteredPrayers,
+    paginatedPrayers,
+    totalPages,
     
     // Actions from store
     setSearchQuery,
     setActiveFilter,
     setCurrentPage,
-    
-    // Computed values from store
-    getPaginatedPrayers,
-    getTotalPages,
     
     // Load data
     loadPrayers
@@ -54,9 +52,6 @@ const WallofPrayers = () => {
     // Navigate to prayer detail page instead of opening modal
     navigate('/prayer-detail', { state: { prayer } });
   }, [navigate]);
-
-  const paginatedPrayers = getPaginatedPrayers();
-  const totalPages = getTotalPages();
 
   // Debug info (if enabled)
   if (ENV.DEBUG && window.PrayerApp) {

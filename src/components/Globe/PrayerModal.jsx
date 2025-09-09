@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserPrayerAudioPlayer from './UserPrayerAudioPlayer';
 
 const PrayerModal = ({ event, isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const PrayerModal = ({ event, isOpen, onClose }) => {
   });
   const [generatedPrayer, setGeneratedPrayer] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [audioGenerated, setAudioGenerated] = useState(false);
 
   if (!isOpen || !event) return null;
 
@@ -24,6 +26,7 @@ const PrayerModal = ({ event, isOpen, onClose }) => {
 
   const handleGeneratePrayer = async () => {
     setIsGenerating(true);
+    setAudioGenerated(false); // Reset audio state
     
     // Mock prayer generation for now (replace with actual API call later)
     setTimeout(() => {
@@ -43,6 +46,9 @@ In unity and hope.`;
   const handleBackdropClick = (e) => {
     // Close modal when clicking on the backdrop (outside the modal content)
     if (e.target === e.currentTarget) {
+      // Reset states when closing
+      setGeneratedPrayer('');
+      setAudioGenerated(false);
       onClose();
     }
   };
@@ -68,7 +74,11 @@ In unity and hope.`;
         {/* Header with candle and close button */}
         <div className="text-center mb-6 relative">
           <button 
-            onClick={onClose}
+            onClick={() => {
+              setGeneratedPrayer('');
+              setAudioGenerated(false);
+              onClose();
+            }}
             className="absolute top-0 right-0 text-gray-300 hover:text-white text-xl"
           >
             ×
@@ -142,7 +152,27 @@ In unity and hope.`;
         {generatedPrayer && (
           <div className="mt-6 p-4 bg-white/10 backdrop-blur-sm rounded border border-yellow-400/30">
             <h4 className="text-yellow-400 mb-3 font-marcellus">Your Generated Prayer:</h4>
-            <p className="text-white leading-relaxed whitespace-pre-line">{generatedPrayer}</p>
+            <p className="text-white leading-relaxed whitespace-pre-line mb-4">{generatedPrayer}</p>
+            
+            {/* Audio Player for Generated Prayer */}
+            <div className="mb-4">
+              <UserPrayerAudioPlayer
+                prayerText={generatedPrayer}
+                eventData={event}
+                autoPlay={false}
+                className="mb-4"
+                onAudioGenerated={(audioData) => {
+                  console.log('Audio generated:', audioData);
+                  setAudioGenerated(true);
+                }}
+              />
+              {audioGenerated && (
+                <p className="text-green-400 text-xs mb-2">
+                  ✓ Audio prayer is ready to play
+                </p>
+              )}
+            </div>
+            
             <button 
               onClick={() => navigate('/prayer-submission', {
                 state: {

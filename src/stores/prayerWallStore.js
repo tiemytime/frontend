@@ -14,6 +14,8 @@ const usePrayerWallStore = create((set, get) => ({
   // Pagination state
   currentPage: 1,
   prayersPerPage: 12,
+  paginatedPrayers: allMockPrayers.slice(0, 12),
+  totalPages: Math.ceil(allMockPrayers.length / 12),
   
   // Modal state
   selectedPrayer: null,
@@ -23,21 +25,47 @@ const usePrayerWallStore = create((set, get) => ({
   isLoading: false,
   error: null,
   
+  updatePagination: () => {
+    const { filteredPrayers, currentPage, prayersPerPage } = get();
+    const startIndex = (currentPage - 1) * prayersPerPage;
+    const endIndex = startIndex + prayersPerPage;
+    const paginatedPrayers = filteredPrayers.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(filteredPrayers.length / prayersPerPage);
+    
+    console.log('Updating pagination:', {
+      totalPrayers: filteredPrayers.length,
+      currentPage,
+      prayersPerPage,
+      startIndex,
+      endIndex,
+      resultCount: paginatedPrayers.length,
+      totalPages
+    });
+    
+    set({ paginatedPrayers, totalPages });
+  },
   // Actions
   setSearchQuery: (query) => {
     set({ searchQuery: query, currentPage: 1 });
     get().applyFilters();
+    get().updatePagination();
   },
   
   setActiveFilter: (filter) => {
     set({ activeFilter: filter, currentPage: 1 });
     get().applyFilters();
+    get().updatePagination();
   },
   
-  setCurrentPage: (page) => set({ currentPage: page }),
+  setCurrentPage: (page) => {
+    console.log('Setting current page to:', page);
+    set({ currentPage: page });
+    get().updatePagination();
+  },
   
   setPrayersPerPage: (perPage) => {
     set({ prayersPerPage: perPage, currentPage: 1 });
+    get().updatePagination();
   },
   
   openModal: (prayer) => set({ selectedPrayer: prayer, isModalOpen: true }),
@@ -68,22 +96,8 @@ const usePrayerWallStore = create((set, get) => ({
     }
     
     set({ filteredPrayers: filtered });
-  },
-  
-  // Computed getters
-  getPaginatedPrayers: () => {
-    const { filteredPrayers, currentPage, prayersPerPage } = get();
-    const startIndex = (currentPage - 1) * prayersPerPage;
-    const endIndex = startIndex + prayersPerPage;
-    return filteredPrayers.slice(startIndex, endIndex);
-  },
-  
-  getTotalPages: () => {
-    const { filteredPrayers, prayersPerPage } = get();
-    return Math.ceil(filteredPrayers.length / prayersPerPage);
-  },
-  
-  // Reset filters
+    get().updatePagination();
+  },  // Reset filters
   resetFilters: () => {
     set({
       searchQuery: '',
@@ -91,8 +105,9 @@ const usePrayerWallStore = create((set, get) => ({
       currentPage: 1,
       filteredPrayers: allMockPrayers
     });
+    get().updatePagination();
   },
-  
+
   // Load prayers (for future API integration)
   loadPrayers: async () => {
     set({ isLoading: true, error: null });

@@ -38,7 +38,7 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
   // Loading state
   if (isLoading) {
     return (
-      <div className={`bg-black/20 backdrop-blur-sm border border-white/20 rounded-lg p-4 ${className}`}>
+      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
         <div className="animate-pulse">
           <div className="flex items-center space-x-2 mb-3">
             <div className="w-4 h-4 bg-gray-600 rounded"></div>
@@ -57,7 +57,7 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
   // Error state
   if (error) {
     return (
-      <div className={`bg-black/20 backdrop-blur-sm border border-red-400/20 rounded-lg p-4 ${className}`}>
+      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
         <div className="flex items-center space-x-2 text-red-400">
           <span className="text-lg">⚠️</span>
           <div>
@@ -72,7 +72,7 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
   // No prayer data
   if (!prayerData) {
     return (
-      <div className={`bg-black/20 backdrop-blur-sm border border-white/20 rounded-lg p-4 ${className}`}>
+      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
         <div className="flex items-center justify-center text-gray-400">
           <span className="text-sm">No prayer available for this event</span>
         </div>
@@ -81,34 +81,38 @@ const DefaultPrayerText = ({ eventId, className = '' }) => {
   }
 
   return (
-    <div className={`bg-black/20 backdrop-blur-sm border border-white/20 rounded-lg p-4 ${className}`}>
-      {/* Prayer Header */}
-      <div className="flex items-center space-x-2 mb-3">
-        <span className="text-yellow-400">🕯️</span>
-        {/* <h4 className="text-white font-marcellus text-sm">Default Prayer</h4> */}
-        {prayerData.generatedAt && (
-          <span className="text-gray-400 text-xs">
-            • {new Date(prayerData.generatedAt).toLocaleDateString()}
-          </span>
-        )}
-      </div>
+    <div className={`bg-transparent backdrop-blur-sm rounded-lg p-4 ${className}`}>
+      
 
       {/* Prayer Text */}
-      <div className="text-gray-200 text-sm leading-relaxed">
+      <div className="text-gray-200 text- text-lg leading-[30px] tracking-wide">
         <p className="whitespace-pre-line">{prayerData.prayerText}</p>
       </div>
 
       {/* Prayer Footer */}
-      <div className="mt-3 pt-3 border-t border-white/10">
+      {/* <div className="mt-3 pt-3 border-t border-white/10">
         <div className="flex items-center justify-between text-xs text-gray-400">
-          {/* <span>AI Generated Prayer</span> */}
-          {/* {prayerData.duration && (
-            // <span>~{prayerData.duration}s reading time</span>
-          )} */}
+          <span>AI Generated Prayer</span>
+          {prayerData.duration && (
+            <span>~{prayerData.duration}s reading time</span>
+          )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default DefaultPrayerText;
+
+
+
+// Prayer Header
+    //   <div className="flex items-center space-x-2 mb-3">
+    //     <span className="text-yellow-400">🕯️</span>
+    //     {/* <h4 className="text-white font-marcellus text-sm">Default Prayer</h4> */}
+    //     {prayerData.generatedAt && (
+    //       <span className="text-gray-400 text-xs">
+    //         • {new Date(prayerData.generatedAt).toLocaleDateString()}
+    //       </span>
+    //     )}
+    //   </div>

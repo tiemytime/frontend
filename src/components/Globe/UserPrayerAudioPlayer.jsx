@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { aiPrayerAPI } from '../../services/aiPrayerAPI';
 import useAudioPlayerStore from '../../stores/audioPlayerStore';
-import { newsAPI } from '../../services/newsAPI';
 
-const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
+const UserPrayerAudioPlayer = ({ 
+  prayerText, 
+  eventData, 
+  autoPlay = false, 
+  className = '',
+  onAudioGenerated = null 
+}) => {
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  const [audioError, setAudioError] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
   
   const {
@@ -11,7 +19,6 @@ const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
     duration,
     volume,
     error,
-    hasAudioForEvent,
     loadAudio,
     togglePlayPause,
     setVolume,
@@ -21,35 +28,57 @@ const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
     cleanup
   } = useAudioPlayerStore();
 
-  // Initialize audio for event
+  // Generate audio when prayer text is available
   useEffect(() => {
-    const initializeAudio = async () => {
-      if (!eventId || hasAudioForEvent(eventId)) {
-        setIsInitialized(true);
-        return;
-      }
+    const generateAudio = async () => {
+      if (!prayerText || !eventData || isInitialized) return;
+
+      setIsGeneratingAudio(true);
+      setAudioError(null);
 
       try {
-        // Fetch audio URL for the event
-        const audioResponse = await newsAPI.getEventAudioPrayer(eventId);
-        
+        // Generate audio using AI Prayer API
+        const audioResponse = await aiPrayerAPI.generateAudioPrayer({
+          id: eventData.id || 'user-generated',
+          prayerText: prayerText
+        }, {
+          voice: 'default',
+          speed: 1.0,
+          format: 'mp3'
+        });
+
         if (audioResponse.success && audioResponse.data.audioUrl) {
-          await loadAudio(eventId, audioResponse.data.audioUrl, { autoPlay });
+          // Load audio into player
+          await loadAudio(
+            `user-prayer-${eventData.id || 'generated'}`, 
+            audioResponse.data.audioUrl, 
+            { autoPlay }
+          );
+          
           setIsInitialized(true);
+          
+          // Notify parent component
+          if (onAudioGenerated) {
+            onAudioGenerated(audioResponse.data);
+          }
+        } else {
+          throw new Error('No audio URL received from server');
         }
       } catch (error) {
-        console.error('Failed to initialize audio:', error);
-        setIsInitialized(true);
+        console.error('Failed to generate prayer audio:', error);
+        setAudioError(error.message || 'Failed to generate audio');
+      } finally {
+        setIsGeneratingAudio(false);
       }
     };
 
-    initializeAudio();
+    generateAudio();
 
     // Cleanup on unmount
     return () => {
       cleanup();
     };
-  }, [eventId, autoPlay, hasAudioForEvent, loadAudio, cleanup]);
+  }, [prayerText, eventData, autoPlay, loadAudio, cleanup, isInitialized, onAudioGenerated]);
 
   // Format time helper
   const timeInfo = getFormattedTime();
@@ -66,6 +95,41 @@ const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
     seekTo(newTime);
   };
 
+  // Handle error dismiss
+  const handleErrorDismiss = () => {
+    setAudioError(null);
+    clearError();
+  };
+
+  // Show generating state
+  if (isGeneratingAudio) {
+    return (
+      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
+        <div className="flex items-center justify-center space-x-2 text-white">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-400"></div>
+          <span className="text-sm">Converting prayer to audio...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (audioError || error) {
+    return (
+      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
+        <div className="flex items-center justify-between text-red-400">
+          <span className="text-sm">{audioError || error}</span>
+          <button
+            onClick={handleErrorDismiss}
+            className="text-xs hover:text-red-300 transition-colors"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Show loading state
   if (!isInitialized || isLoading) {
     return (
@@ -78,33 +142,16 @@ const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
     );
   }
 
-  // Show error state
-  if (error) {
-    return (
-      <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
-        <div className="flex items-center justify-between text-red-400">
-          <span className="text-sm">{error}</span>
-          <button
-            onClick={clearError}
-            className="text-xs hover:text-red-300 transition-colors"
-          >
-            Dismiss
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`bg-black/40 backdrop-blur-sm rounded-lg p-4 ${className}`}>
       {/* Audio Controls Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
-          {/* Music note icon */}
+          {/* Sound wave icon for generated prayer */}
           <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" clipRule="evenodd" />
+            <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.776L5.05 14H2a1 1 0 01-1-1V7a1 1 0 011-1h3.05l3.333-2.776zM13 6a1 1 0 011 1v6a1 1 0 11-2 0V7a1 1 0 011-1zm3.854-1.146a.5.5 0 010 .708L15.5 6.914a1.5 1.5 0 000 2.172l1.354 1.354a.5.5 0 01-.708.708L14.793 9.793a2.5 2.5 0 010-3.586l1.353-1.353a.5.5 0 01.708 0z" clipRule="evenodd" />
           </svg>
-          <span className="text-white text-sm font-marcellus">Prayer Audio</span>
+          <span className="text-white text-sm font-marcellus">Your Prayer Audio</span>
         </div>
         
         {/* Time Display */}
@@ -197,4 +244,4 @@ const AudioPrayerPlayer = ({ eventId, autoPlay = true, className = '' }) => {
   );
 };
 
-export default AudioPrayerPlayer;
+export default UserPrayerAudioPlayer;

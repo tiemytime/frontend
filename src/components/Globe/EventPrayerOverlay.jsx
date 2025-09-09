@@ -7,13 +7,13 @@ const EventPrayerOverlay = ({ event, isVisible }) => {
 
   return (
     <>
-      {/* Audio Player - Bottom Left */}
-      <div className="fixed bottom-6 left-6 z-30 w-80 max-w-sm animate-fade-in">
+      {/* Audio Player - Bottom Left, positioned higher */}
+      <div className="fixed bottom-20 left-6 z-30 w-80 max-w-sm animate-fade-in">
         <AudioPrayerPlayer eventId={event.id} autoPlay={true} />
       </div>
 
-      {/* Default Prayer Text - Bottom Center */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-30 w-96 max-w-md animate-fade-in">
+      {/* Default Prayer Text - Bottom Center, positioned higher */}
+      <div className="fixed bottom-32 left-1/2 transform -translate-x-1/2 z-30 w-96 max-w-md animate-fade-in">
         <DefaultPrayerText eventId={event.id} />
       </div>
 

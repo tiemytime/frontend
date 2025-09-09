@@ -12,7 +12,7 @@ const GlobeHeader = () => {
       {/* Logo */}
       <div className="flex flex-col items-center pointer-events-auto">
         <img src="/logo.png" alt="Logo" className="w-12 h-12 sm:w-15 sm:h-15 mb-1 sm:mb-2" />
-        <div className="text-white font-marcellus text-sm sm:text-lg leading-[1.4] text-center">
+        <div className="text-white font-marcellus text-xs sm:text-base leading-[1.4] text-center">
           <div>One prayer</div>
           <div>One world</div>
         </div>
